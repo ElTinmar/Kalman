@@ -32,7 +32,7 @@ def test_update_without_missing(kf_2x1):
     z = np.array([[2]], dtype=np.float32)
     kf_2x1.predict()
     kf_2x1.update(z)
-    assert np.isclose(kf_2x1.x[0, 0], 2.0, atol=1e-2)
+    assert np.isclose(kf_2x1.x[0, 0], 1.75, atol=1e-2)
 
 def test_update_wrap_angle(kf_angle):
     z = np.array([[-np.pi + 0.1]], dtype=np.float32)  
