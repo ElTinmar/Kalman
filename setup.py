@@ -13,5 +13,6 @@ setup(
         "numpy", 
         "scipy",
         "numba",
+        "pytest"
     ]
 )

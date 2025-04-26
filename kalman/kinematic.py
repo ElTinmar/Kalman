@@ -1,7 +1,7 @@
 import math
 import numpy as np
 from scipy.linalg import block_diag
-
+from .kalman import KalmanFilter
 
 def kinematic_state_transition(order, dt):
     """
