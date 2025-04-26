@@ -10,7 +10,6 @@ def wrap_angle(a: float) -> float:
 def angle_diff(a1: float, a2: float) -> float: 
     return wrap_angle(a1 - a2)
 
-
 spec = [
     ('dim_x', int64),
     ('dim_z', int64),
