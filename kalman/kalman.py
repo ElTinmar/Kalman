@@ -1,5 +1,15 @@
 import numpy as np
-from numba import njit, jitclass, float32, int64
+from numba import njit, float32, int64
+from numba.experimental import jitclass
+
+@njit(float32(float32))
+def wrap_angle(a: float) -> float:
+    return ((a + np.pi) % (2*np.pi)) - np.pi
+
+@njit(float32(float32, float32))
+def angle_diff(a1: float, a2: float) -> float: 
+    return wrap_angle(a1 - a2)
+
 
 spec = [
     ('dim_x', int64),
@@ -12,14 +22,6 @@ spec = [
     ('R', float32[:, :]),
     ('_I', float32[:, :]),
 ]
-
-@njit(float32(float32))
-def wrap_angle(a: float) -> float:
-    return ((a + np.pi) % (2*np.pi)) - np.pi
-
-@njit(float32(float32, float32))
-def angle_diff(a1: float, a2: float) -> float: 
-    return wrap_angle(a1 - a2)
 
 @jitclass(spec)
 class KalmanFilter:

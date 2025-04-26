@@ -35,8 +35,8 @@ def test_update_without_missing(kf_2x1):
     assert np.isclose(kf_2x1.x[0, 0], 2.0, atol=1e-2)
 
 def test_update_wrap_angle(kf_angle):
-    z = np.array([[-np.pi + 0.1]], dtype=np.float32)  # wrapped measurement
+    z = np.array([[-np.pi + 0.1]], dtype=np.float32)  
     kf_angle.predict()
-    kf_angle.update_wrap_angle(z.reshape(-1,1), which=0)
+    kf_angle.update_wrap_angle(z.reshape(-1,1), 0)
     diff = angle_diff(kf_angle.x[0, 0], -np.pi + 0.1)
     assert abs(diff) < 1e-1
