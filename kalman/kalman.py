@@ -41,31 +41,43 @@ class KalmanFilter:
         self.R = np.eye(dim_z, dtype=np.float32)               
         self._I = np.eye(dim_x, dtype=np.float32)
 
-    def predict(self) -> None:
-        self.x = np.dot(self.F, self.x)
-        self.P = np.dot(np.dot(self.F, self.P), self.F.T) + self.Q
+    def predict(self):
+        
+        # predict x
+        self.x = self.F @ self.x
+        
+        #predict P
+        self.P = self.F @ self.P @ self.F.T + self.Q
 
-    def update(self, z) -> None:
-        y = z - np.dot(self.H, self.x)
-
-        PHT = np.dot(self.P, self.H.T)
-        S = np.dot(self.H, PHT) + self.R
+    def update(self, z):
+        # innovation
+        y = z - self.H @ self.x
+        
+        # update x
+        PHT = self.P @ self.H.T
+        S = self.H @ PHT + self.R
         K = np.linalg.solve(S, PHT.T).T
-        self.x = self.x + np.dot(K, y)
+        self.x = self.x + K @ y
 
-        I_KH = self._I - np.dot(K, self.H)
-        self.P = np.dot(np.dot(I_KH, self.P), I_KH.T) + np.dot(np.dot(K, self.R), K.T)
+        # update P
+        I_KH = self._I - K @ self.H
+        self.P = I_KH @ self.P @ I_KH.T + K @ self.R @ K.T
+
 
     def update_wrap_angle(self, z, which) -> None:
-        Hx = np.dot(self.H, self.x)
+
+        # innovation
+        Hx = self.H @ self.x
         y = z - Hx
         y[which, 0] = angle_diff(z[which,0], Hx[which,0])
 
-        PHT = np.dot(self.P, self.H.T)
-        S = np.dot(self.H, PHT) + self.R
+        # update x
+        PHT = self.P @ self.H.T
+        S = self.H @ PHT + self.R
         K = np.linalg.solve(S, PHT.T).T
-        self.x = self.x + np.dot(K, y)
+        self.x = self.x + K @ y
         self.x[which, 0] = wrap_angle(self.x[which, 0])
 
-        I_KH = self._I - np.dot(K, self.H)
-        self.P = np.dot(np.dot(I_KH, self.P), I_KH.T) + np.dot(np.dot(K, self.R), K.T)
+        # update P
+        I_KH = self._I - K @ self.H
+        self.P = I_KH @ self.P @ I_KH.T + K @ self.R @ K.T
