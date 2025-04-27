@@ -1,6 +1,10 @@
 import numpy as np
 from numba import njit, float32, int64
 from numba.experimental import jitclass
+from numba.core.errors import NumbaPerformanceWarning
+import warnings
+
+warnings.simplefilter('ignore', category=NumbaPerformanceWarning)
 
 @njit(float32(float32))
 def wrap_angle(a: float) -> float:

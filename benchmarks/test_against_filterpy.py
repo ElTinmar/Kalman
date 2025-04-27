@@ -4,13 +4,13 @@ from kalman import KalmanFilter as myKF
 from filterpy.kalman import KalmanFilter as fpKF
 
 def benchmark():
+
     z = np.random.randn(3, 1).astype(np.float32)
     for kf in [fpKF(9, 3), myKF(9, 3)]:
 
-        # warmup
-        for _ in range(100):
-            kf.predict()
-            kf.update(z)
+        # warmup (compile for numba)
+        kf.predict()
+        kf.update(z)
 
         # measure
         start = time.perf_counter()
