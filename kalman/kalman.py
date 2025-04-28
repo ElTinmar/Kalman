@@ -53,10 +53,12 @@ class KalmanFilter:
         # innovation
         y = z - self.H @ self.x
         
-        # update x
+        # compute kalman gain
         PHT = self.P @ self.H.T
         S = self.H @ PHT + self.R
         K = np.linalg.solve(S, PHT.T).T
+
+        # update x
         self.x = self.x + K @ y
 
         # update P
@@ -70,14 +72,30 @@ class KalmanFilter:
         Hx = self.H @ self.x
         y = z - Hx
         y[which, 0] = angle_diff(z[which,0], Hx[which,0])
-
-        # update x
+        
+        # compute kalman gain
         PHT = self.P @ self.H.T
         S = self.H @ PHT + self.R
         K = np.linalg.solve(S, PHT.T).T
+
+        # update x
         self.x = self.x + K @ y
         self.x[which, 0] = wrap_angle(self.x[which, 0])
 
         # update P
         I_KH = self._I - K @ self.H
         self.P = I_KH @ self.P @ I_KH.T + K @ self.R @ K.T
+
+    def __repr__(self):
+
+        return '\n'.join([
+            f'{self.dim_x=}',
+            f'{self.dim_z=}',
+            f'{self.x=}',
+            f'{self.P=}',
+            f'{self.Q=}',
+            f'{self.F=}',
+            f'{self.H=}',
+            f'{self.R=}',
+            f'{self._I=}'
+        ])
