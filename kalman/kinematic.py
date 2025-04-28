@@ -14,19 +14,19 @@ def kinematic_state_transition(order, dt):
 
     # hard code common cases for computational efficiency
     if order == 0:
-        return np.array([[1.]])
+        return np.array([[1.]], dtype=np.float32)
     if order == 1:
         return np.array([[1., dt],
-                         [0., 1.]])
+                         [0., 1.]], dtype=np.float32)
     if order == 2:
         return np.array([[1., dt, 0.5*dt*dt],
                          [0., 1., dt],
-                         [0., 0., 1.]])
+                         [0., 0., 1.]], dtype=np.float32)
 
     # grind it out computationally....
     N = order + 1
 
-    F = np.zeros((N, N))
+    F = np.zeros((N, N), dtype=np.float32)
     # compute highest order row
     for n in range(N):
         F[0, n] = float(dt**n) / math.factorial(n)
