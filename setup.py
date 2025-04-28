@@ -4,7 +4,7 @@ setup(
     name='kalman',
     python_requires='>=3.8',
     author='Martin Privat',
-    version='0.1.3',
+    version='0.1.4',
     packages=['kalman'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     description='simple kalman filter',
