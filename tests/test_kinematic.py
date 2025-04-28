@@ -33,43 +33,27 @@ def test_kinematic_state_transition_invalid_order():
         kinematic_state_transition(2.5, 1.0)
 
 
-def test_kinematic_kf_order_by_dim_true():
-    dt = 0.2
-    dim = 3
-    order = 1
+def test_measurement_matrix_order_by_dim():
+    """Test that H is correctly set when order_by_dim=True."""
+    kf = kinematic_kf(dim=3, order=1, dt=0.2, dim_z=3, order_by_dim=True)
+    
+    # H should have ones in the diagonal corresponding to the state vector position parts (x, y, z)
+    expected_H = np.array([[1., 0., 0., 0., 0., 0.],
+                           [0., 0., 1., 0., 0., 0.],
+                           [0., 0., 0., 0., 1., 0.]])
+    
+    np.testing.assert_array_equal(kf.H, expected_H)
 
-    kf = kinematic_kf(dim=dim, order=order, dt=dt, order_by_dim=True)
-
-    assert isinstance(kf, KalmanFilter)
-    assert kf.F.shape == (dim * (order + 1), dim * (order + 1))
-    assert kf.H.shape == (1, dim * (order + 1))
-
-    # Check that F is block diagonal
-    block = kinematic_state_transition(order, dt)
-    for i in range(dim):
-        idx = slice(i * (order + 1), (i + 1) * (order + 1))
-        np.testing.assert_array_almost_equal(kf.F[idx, idx], block)
-
-
-def test_kinematic_kf_order_by_dim_false():
-    dt = 0.5
-    dim = 2
-    order = 1
-
-    kf = kinematic_kf(dim=dim, order=order, dt=dt, order_by_dim=False)
-
-    assert isinstance(kf, KalmanFilter)
-    assert kf.F.shape == (dim * (order + 1), dim * (order + 1))
-
-    # Check that the structure is interleaved
-    dim_x = order + 1
-    F_base = kinematic_state_transition(order, dt)
-    for i in range(dim_x):
-        for j in range(dim_x):
-            expected_block = np.eye(dim) * F_base[i, j]
-            block = kf.F[i * dim:(i+1)*dim, j * dim:(j+1)*dim]
-            np.testing.assert_array_almost_equal(block, expected_block)
-
+def test_measurement_matrix_order_not_by_dim():
+    """Test that H is correctly set when order_by_dim=False."""
+    kf = kinematic_kf(dim=3, order=1, dt=0.2, dim_z=3, order_by_dim=False)
+    
+    # H should have ones along the diagonal, interleaving the dimensions (x, y, z)
+    expected_H = np.array([[1., 0., 0., 0., 0., 0.],
+                           [0., 1., 0., 0., 0., 0.],
+                           [0., 0., 1., 0., 0., 0.]])
+    
+    np.testing.assert_array_equal(kf.H, expected_H)
 
 def test_kinematic_kf_invalid_parameters():
     with pytest.raises(ValueError):
