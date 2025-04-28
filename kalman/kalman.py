@@ -85,17 +85,3 @@ class KalmanFilter:
         # update P
         I_KH = self._I - K @ self.H
         self.P = I_KH @ self.P @ I_KH.T + K @ self.R @ K.T
-
-    def __repr__(self):
-
-        return '\n'.join([
-            f'{self.dim_x=}',
-            f'{self.dim_z=}',
-            f'{self.x=}',
-            f'{self.P=}',
-            f'{self.Q=}',
-            f'{self.F=}',
-            f'{self.H=}',
-            f'{self.R=}',
-            f'{self._I=}'
-        ])
