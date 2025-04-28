@@ -56,7 +56,11 @@ class KalmanFilter:
         # update x
         PHT = self.P @ self.H.T
         S = self.H @ PHT + self.R
-        K = np.linalg.solve(S, PHT.T).T
+
+        SI = self.linalg.inv(S)
+        K = PHT @ SI
+        
+        #K = np.linalg.solve(S, PHT.T).T
         self.x = self.x + K @ y
 
         # update P
