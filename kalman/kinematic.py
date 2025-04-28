@@ -147,12 +147,10 @@ def kinematic_kf(dim, order, dt=1., dim_z=1, order_by_dim=True, kf=None):
             kf.F[ix:ix+dim, iy:iy+dim] = f
 
     if order_by_dim:
-        for i in range(dim_z):
-            for j in range(dim):
-                kf.H[i, j * dim_x] = 1.
+        for i in range(dim):
+            kf.H[i, i * dim_x] = 1.
     else:
-        for i in range(dim_z):
-            for j in range(dim):
-                kf.H[i, j] = 1.
-
+        for i in range(dim):
+            kf.H[i, i] = 1.
+            
     return kf
