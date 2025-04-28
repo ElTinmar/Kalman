@@ -57,7 +57,7 @@ class KalmanFilter:
         PHT = self.P @ self.H.T
         S = self.H @ PHT + self.R
 
-        SI = self.linalg.inv(S)
+        SI = np.linalg.inv(S)
         K = PHT @ SI
         
         #K = np.linalg.solve(S, PHT.T).T
