@@ -10,3 +10,5 @@ https://github.com/rlabbe/filterpy/tree/master/filterpy
 The code is basic and uses numba jitclass for performance.
 I added a function to predict angles by wrapping angles properly
 in the update step.
+
+python -m benchmarks.test_against_filterpy
